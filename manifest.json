@@ -1,0 +1,11 @@
+{
+	"id": "type-less-obsidian-plugin",
+	"name": "Type less",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Type less keys with configurable shorthands that expand",
+	"author": "Obsidian",
+	"authorUrl": "https://obsidian.md",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": false
+}
