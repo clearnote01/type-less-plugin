@@ -8,7 +8,8 @@ import {
 	Modal,
 	Plugin,
 	PluginSettingTab,
-	Setting
+	Setting,
+	TextComponent,
 } from "obsidian";
 
 interface MyPluginSettings {
@@ -119,6 +120,26 @@ export default class MyPlugin extends Plugin {
 			},
 		});
 
+		this.addCommand({
+			id: "Quick Configure Shortcuts",
+			name: "Quick Configure Shortcuts",
+			checkCallback: (checking: boolean) => {
+				// Conditions to check
+				const markdownView =
+					this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (markdownView) {
+					// If checking is true, we're simply "checking" if the command can be run.
+					// If checking is false, then we want to actually perform the operation.
+					if (!checking) {
+						new QuickConfigurationModal(this.app, this).open();
+					}
+
+					// This command will only show up in Command Palette when the check function returns true
+					return true;
+				}
+			},
+		});
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 	}
@@ -155,7 +176,9 @@ export class ConfigurationModal extends Modal {
 
 		new Setting(contentEl)
 			.setName("Shortcuts Map")
-			.setDesc("Configure the shortcuts here, this is a map with left side as shortcut and right side as the completion")
+			.setDesc(
+				"Configure the shortcuts here, this is a map with left side as shortcut and right side as the completion"
+			)
 			.addTextArea((text) =>
 				text
 					.setValue(
@@ -175,6 +198,54 @@ export class ConfigurationModal extends Modal {
 				.setButtonText("Submit")
 				.setCta()
 				.onClick(() => {
+					this.close();
+				})
+		);
+	}
+
+	onClose() {
+		let { contentEl } = this;
+		contentEl.empty();
+	}
+}
+
+export class QuickConfigurationModal extends Modal {
+	result: string;
+	plugin: MyPlugin;
+	leftSide?: TextComponent;
+	rightSide?: TextComponent;
+	onSubmit: (result: string) => void;
+
+	constructor(app: App, plugin: MyPlugin) {
+		super(app);
+		this.plugin = plugin;
+	}
+
+	onOpen() {
+		const { contentEl } = this;
+
+		contentEl.createEl("h1", { text: "Quick Add Shortcut" });
+
+		new Setting(contentEl)
+			.addText((text) => {
+				text.setPlaceholder("Shortcut");
+				this.leftSide = text;
+			})
+			.addText((text) => {
+				text.setPlaceholder("Expansion");
+				this.rightSide = text;
+			});
+
+		new Setting(contentEl).addButton((btn) =>
+			btn
+				.setButtonText("Submit")
+				.setCta()
+				.onClick(() => {
+					const leftVal = this.leftSide?.getValue();
+					const rightVal = this.rightSide?.getValue();
+					if (leftVal && rightVal) {
+						this.plugin.settings.shortcutMap[leftVal] = rightVal;
+					}
 					this.close();
 				})
 		);
