@@ -285,7 +285,7 @@ function addSetting({
 					if (value === "") {
 						throw new Error("field cannot be empty");
 					}
-					plugin.settings[settingKey] = value;
+					(plugin.settings as any)[settingKey] = value;
 					await plugin.saveSettings();
 				})
 		);
