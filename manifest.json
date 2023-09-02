@@ -3,9 +3,8 @@ t{
 	"name": "Type less",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Type less keys with configurable shorthands that expand",
+	"description": "Type less keys with configurable shorthands that expand.",
 	"author": "clearnote01",
 	"authorUrl": "https://github.com/clearnote01",
-	"fundingUrl": "https://github.com/clearnote01",
 	"isDesktopOnly": false
 }
