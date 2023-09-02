@@ -1,7 +1,7 @@
 {
-	"id": "type-less-obsidian-plugin",
+	"id": "type-less",
 	"name": "Type less",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "Type less keys with configurable shorthands that expand.",
 	"author": "clearnote01",
