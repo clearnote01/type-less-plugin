@@ -273,7 +273,7 @@ function addSetting({
 	desc,
 	placeholder,
 	settingKey,
-}: SettingItem<keyof Omit<MyPluginSettings, "shortcutMap">>) {
+}: SettingItem<'specialCharEnd' | 'specialCharStart'>) {
 	new Setting(containerEl)
 		.setName(name)
 		.setDesc(desc)
@@ -285,7 +285,7 @@ function addSetting({
 					if (value === "") {
 						throw new Error("field cannot be empty");
 					}
-					(plugin.settings as any)[settingKey] = value;
+					plugin.settings[settingKey] = value;
 					await plugin.saveSettings();
 				})
 		);
