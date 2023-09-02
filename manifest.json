@@ -1,7 +1,7 @@
 {
 	"id": "type-less",
 	"name": "Type less",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"minAppVersion": "0.15.0",
 	"description": "Type less keys with configurable shorthands that expand.",
 	"author": "clearnote01",
