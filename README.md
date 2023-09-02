@@ -3,6 +3,12 @@ Obsidian plugin for auto shortcut expansion
 
 # Usage
 
+
+
+https://github.com/clearnote01/type-less-plugin/assets/9555129/6c04bd65-0f29-4fce-a1b9-4c593e8e3563
+
+
+
 In the editor, type `;t` and then <SPACE>, this will auto-complete to `the`. The `;` key indicates the plugin that the current word might be a shortcut. Then when `<SPACE>` is observed, it will try to match the word under the current cursor position with a mapped expansion. `;` and `<SPACE>` can both be configured to different characters via the Settings tab.
 
 # Configuration
