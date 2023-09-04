@@ -12,7 +12,7 @@ import {
 	TextComponent,
 } from "obsidian";
 
-interface MyPluginSettings {
+interface PluginSettings {
 	specialCharStart: string;
 	specialCharEnd: string;
 	mySetting: string;
@@ -20,7 +20,7 @@ interface MyPluginSettings {
 	wordsAutoCompleted: number;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: PluginSettings = {
 	mySetting: "default",
 	specialCharStart: ";",
 	specialCharEnd: " ",
@@ -28,17 +28,16 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	wordsAutoCompleted: 0,
 };
 
-type StateWatch = "watching" | "notwatching";
-const state = { cur: [], state: "notwatching" };
+const state = { state: "notwatching" };
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class TypeLessPlugin extends Plugin {
+	settings: PluginSettings;
 
 	async onload() {
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		const statusBarItemEl = this.addStatusBarItem();
 
-		function handleKeyDown(pluginSelf: MyPlugin, event: KeyboardEvent) {
+		function handleKeyDown(pluginSelf: TypeLessPlugin, event: KeyboardEvent) {
 			const specialCharStart = pluginSelf.settings.specialCharStart;
 			const specialCharEnd = pluginSelf.settings.specialCharEnd;
 			const shortcutMap = pluginSelf.settings.shortcutMap;
@@ -96,52 +95,40 @@ export default class MyPlugin extends Plugin {
 
 		await this.loadSettings();
 
-		// Perform additional things with the ribbon
-		// ribbonIconEl.addClass("my-plugin-ribbon-class");
 
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
 		this.addCommand({
-			id: "Configure Shortcuts",
-			name: "Configure Shortcuts",
+			id: "Add Shortcuts",
+			name: "Add Shortcuts",
 			checkCallback: (checking: boolean) => {
-				// Conditions to check
 				const markdownView =
 					this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
 					if (!checking) {
 						new ConfigurationModal(this.app, this).open();
 					}
 
-					// This command will only show up in Command Palette when the check function returns true
 					return true;
 				}
 			},
 		});
 
 		this.addCommand({
-			id: "Quick Configure Shortcuts",
-			name: "Quick Configure Shortcuts",
+			id: "Quick Add Shortcut",
+			name: "Quick Add Shortcut",
 			checkCallback: (checking: boolean) => {
-				// Conditions to check
 				const markdownView =
 					this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
 					if (!checking) {
 						new QuickConfigurationModal(this.app, this).open();
 					}
 
-					// This command will only show up in Command Palette when the check function returns true
 					return true;
 				}
 			},
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
 	onunload() {}
@@ -161,10 +148,10 @@ export default class MyPlugin extends Plugin {
 
 export class ConfigurationModal extends Modal {
 	result: string;
-	plugin: MyPlugin;
+	plugin: TypeLessPlugin;
 	onSubmit: (result: string) => void;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: TypeLessPlugin) {
 		super(app);
 		this.plugin = plugin;
 	}
@@ -172,7 +159,7 @@ export class ConfigurationModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 
-		contentEl.createEl("h1", { text: "Configure Shortcuts!" });
+		contentEl.createEl("h1", { text: "Configure Shortcuts" });
 
 		new Setting(contentEl)
 			.setName("Shortcuts Map")
@@ -211,12 +198,12 @@ export class ConfigurationModal extends Modal {
 
 export class QuickConfigurationModal extends Modal {
 	result: string;
-	plugin: MyPlugin;
+	plugin: TypeLessPlugin;
 	leftSide?: TextComponent;
 	rightSide?: TextComponent;
 	onSubmit: (result: string) => void;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: TypeLessPlugin) {
 		super(app);
 		this.plugin = plugin;
 	}
@@ -257,8 +244,8 @@ export class QuickConfigurationModal extends Modal {
 	}
 }
 
-interface SettingItem<T = keyof Omit<MyPluginSettings, "shortcutMap">> {
-	plugin: MyPlugin;
+interface SettingItem<T = keyof Omit<PluginSettings, "shortcutMap">> {
+	plugin: TypeLessPlugin;
 	containerEl: HTMLElement;
 	name: string;
 	desc: string;
@@ -298,7 +285,7 @@ function addShortCutSettingBlock({
 	desc,
 	placeholder,
 	settingKey,
-}: SettingItem<keyof Pick<MyPluginSettings, "shortcutMap">>) {
+}: SettingItem<keyof Pick<PluginSettings, "shortcutMap">>) {
 	new Setting(containerEl)
 		.setName(name)
 		.setDesc(desc)
@@ -312,10 +299,10 @@ function addShortCutSettingBlock({
 		);
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class SettingsTab extends PluginSettingTab {
+	plugin: TypeLessPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: TypeLessPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -328,7 +315,7 @@ class SampleSettingTab extends PluginSettingTab {
 			plugin: this.plugin,
 			containerEl,
 			name: "Special Character Start",
-			desc: "Specify a shortcut using this special character at the start of the word",
+			desc: "Default <;>. Specify a shortcut using this special character at the start of the word",
 			placeholder: ";",
 			settingKey: "specialCharStart",
 		});
